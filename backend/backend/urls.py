@@ -7,5 +7,6 @@ from user_api.views import UserObtainToken
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^api/', include('user_api.urls')),
+    re_path(r'^api/', include('product_api.urls')),
     re_path(r'^auth/?$', UserObtainToken.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
