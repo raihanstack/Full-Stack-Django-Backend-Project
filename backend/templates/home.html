@@ -374,7 +374,7 @@
                     <p class="card-desc">Engineered for speed and sub-millisecond response times using advanced Django
                         optimizations.</p>
                 </div>
-                <a href="/api/" class="btn btn-glass">Explore System Docs <i class="fas fa-arrow-right"></i></a>
+                <a href="{% url 'swagger-ui' %}" class="btn btn-glass">Explore System Docs <i class="fas fa-arrow-right"></i></a>
             </section>
 
             <!-- Security -->
@@ -399,10 +399,10 @@
             <section class="bento-item item-5">
                 <h3>🛠️ System Navigation</h3>
                 <div class="nav-buttons">
-                    <a href="/api/products/" class="btn btn-main"><i class="fas fa-box"></i> Product API</a>
-                    <a href="/api/users/" class="btn btn-glass"><i class="fas fa-users-gear"></i> User Logic</a>
-                    <a href="/api/cart-items/" class="btn btn-glass"><i class="fas fa-cart-shopping"></i> Cart Core</a>
-                    <a href="/admin/" class="btn btn-glass"><i class="fas fa-user-shield"></i> Admin Portal</a>
+                    <a href="/api/products/products/" class="btn btn-main"><i class="fas fa-box"></i> Product API</a>
+                    <a href="{% url 'register' %}" class="btn btn-glass"><i class="fas fa-users-gear"></i> User Logic</a>
+                    <a href="/api/orders/cart/mine/" class="btn btn-glass"><i class="fas fa-cart-shopping"></i> Cart Core</a>
+                    <a href="{% url 'admin:index' %}" class="btn btn-glass"><i class="fas fa-user-shield"></i> Admin Portal</a>
                 </div>
             </section>
         </main>
