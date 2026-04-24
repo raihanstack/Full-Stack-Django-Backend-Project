@@ -1,10 +1,10 @@
-# 🌲 RaihanStack | Professional E-Commerce Backend
+# 🌲 raihanstack | Professional E-Commerce Backend
 
 [![Django](https://img.shields.io/badge/Django-6.0+-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Django Rest Framework](https://img.shields.io/badge/DRF-3.17+-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org/)
 [![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
-A robust, scalable, and secure e-commerce backend built with **Django** and **Django Rest Framework**. This project provides a comprehensive API for user management, product catalogs, and shopping cart functionality.
+A simple and powerful online store system built with **Django**. This project helps you manage users, products, and a shopping cart easily through a clean and secure interface.
 
 ---
 
@@ -132,4 +132,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 This project is licensed under the MIT License.
 
 ---
-Developed with ❤️ by [Raihan](https://github.com/mraihan)
+Developed with ❤️ by [Raihan](https://github.com/raihanstack)

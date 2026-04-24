@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>raihanstack |Backend Systems Architect & API specialist</title>
+
+    <!-- SEO Metadata -->
+    <meta name="description"
+        content="Professional portfolio of raihanstack, a Backend Systems Architect specializing in scalable Django APIs, enterprise security, and high-performance database systems.">
+    <meta name="keywords"
+        content="Backend Developer, Django Architect, REST API, Python Specialist, Scalable Systems, raihanstack">
+    <meta name="author" content="raihanstack">
+
+    <!-- Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #092E20;
+            --primary-light: #125c40;
+            --accent: #a5d6a7;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #051a12;
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 80% 20%, rgba(18, 92, 64, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 20% 80%, rgba(46, 125, 50, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .social-link {
+            color: var(--text-main);
+            font-size: 1.6rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
+        }
+
+        .social-link:hover {
+            opacity: 1;
+            transform: translateY(-5px);
+            color: var(--accent);
+        }
+
+        /* Bento Grid System */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px;
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .bento-item {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .item-1 {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        /* Terminal */
+        .item-2 {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        /* Core Features */
+        .item-3 {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        /* Security */
+        .item-4 {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+
+        /* Database */
+        .item-5 {
+            grid-column: span 4;
+            grid-row: span 1;
+        }
+
+        /* Quick Navigation */
+
+        /* Terminal Component */
+        .terminal {
+            background: #000;
+            border-radius: 16px;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .red {
+            background: #ff5f56;
+        }
+
+        .yellow {
+            background: #ffbd2e;
+        }
+
+        .green {
+            background: #27c93f;
+        }
+
+        .terminal-body {
+            padding: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            color: #ddd;
+        }
+
+        .t-cmd {
+            color: var(--accent);
+        }
+
+        .t-success {
+            color: #81c784;
+        }
+
+        /* Typography & Cards */
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        /* Button System */
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 18px 25px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-main {
+            background: var(--text-main);
+            color: var(--primary);
+        }
+
+        .btn-main:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .btn-glass {
+            background: var(--glass);
+            color: white;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: minmax(200px, auto);
+            }
+
+            .item-1,
+            .item-2,
+            .item-3,
+            .item-4,
+            .item-5 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 0.9rem;
+                letter-spacing: 2px;
+            }
+
+            .bento-item {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <header>
+            <div class="tagline">Backend Systems Architect</div>
+            <h1 class="logo">raihanstack</h1>
+            <div class="social-links">
+                <a href="https://github.com/raihanstack" target="_blank" class="social-link" title="GitHub Profile">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/raihanstack" target="_blank" class="social-link"
+                    title="LinkedIn Profile">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </header>
+
+        <main class="bento-grid">
+            <!-- Terminal Section -->
+            <section class="bento-item item-1">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <div class="terminal-body">
+                        <p><span class="t-cmd">raihan@stack:</span> ~/engine</p>
+                        <p>> init backend_v1.0</p>
+                        <p class="t-success">✓ Database Migrations: OK</p>
+                        <p class="t-success">✓ Environment Security: SECURE</p>
+                        <p class="t-success">✓ API Node: OPERATIONAL</p>
+                        <p>> ready for scale</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scalability -->
+            <section class="bento-item item-2">
+                <div>
+                    <h3>🚀 High-Performance APIs</h3>
+                    <p class="card-desc">Engineered for speed and sub-millisecond response times using advanced Django
+                        optimizations.</p>
+                </div>
+                <a href="/api/" class="btn btn-glass">Explore System Docs <i class="fas fa-arrow-right"></i></a>
+            </section>
+
+            <!-- Security -->
+            <section class="bento-item item-3">
+                <i class="fas fa-shield-halved" style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;"></i>
+                <div>
+                    <h3>🔐 Auth Logic</h3>
+                    <p class="card-desc">Enterprise-grade security.</p>
+                </div>
+            </section>
+
+            <!-- Database -->
+            <section class="bento-item item-4">
+                <i class="fas fa-database" style="font-size: 2rem; color: var(--accent); margin-bottom: 20px;"></i>
+                <div>
+                    <h3>📊 Data Engine</h3>
+                    <p class="card-desc">Optimized SQL queries.</p>
+                </div>
+            </section>
+
+            <!-- Navigation Links -->
+            <section class="bento-item item-5">
+                <h3>🛠️ System Navigation</h3>
+                <div class="nav-buttons">
+                    <a href="/api/products/" class="btn btn-main"><i class="fas fa-box"></i> Product API</a>
+                    <a href="/api/users/" class="btn btn-glass"><i class="fas fa-users-gear"></i> User Logic</a>
+                    <a href="/api/cart-items/" class="btn btn-glass"><i class="fas fa-cart-shopping"></i> Cart Core</a>
+                    <a href="/admin/" class="btn btn-glass"><i class="fas fa-user-shield"></i> Admin Portal</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 raihanstack | Backend Systems Architect | Scalable Architecture</p>
+        </footer>
+    </div>
+</body>
+
+</html>
