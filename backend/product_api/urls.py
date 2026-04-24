@@ -1,11 +1,12 @@
-from rest_framework import routers
-from .views import ProductViewSet, CartItemViewSet
-from django.urls import re_path, include
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ProductViewSet, CategoryViewSet, WishlistViewSet
 
-router = routers.DefaultRouter()
-router.register(r'products', ProductViewSet)
-router.register('cart-items', CartItemViewSet)
+router = DefaultRouter()
+router.register('products', ProductViewSet)
+router.register('categories', CategoryViewSet)
+router.register('wishlist', WishlistViewSet, basename='wishlist')
 
 urlpatterns = [
-    re_path(r'^', include(router.urls)),
+    path('', include(router.urls)),
 ]

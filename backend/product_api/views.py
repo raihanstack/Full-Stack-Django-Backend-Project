@@ -1,57 +1,62 @@
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import filters, status
+from rest_framework import viewsets, permissions, filters, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import CartItem, Product
-from .serializers import CartItemSerializer, ProductSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Category, Product, Review, Wishlist
+from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer, WishlistSerializer
 
+class IsVendorOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_authenticated and request.user.role == 'VENDOR'
 
-class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+    def has_object_permission(self, request, obj, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.vendor == request.user
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug'
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.filter(is_active=True)
     serializer_class = ProductSerializer
-
-    filter_backends = [filters.SearchFilter]
+    permission_classes = [IsVendorOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'vendor', 'price']
     search_fields = ['name', 'description']
+    ordering_fields = ['price', 'created_at']
 
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(vendor=self.request.user)
 
-    def perform_update(self, serializer):
-        serializer.save()
-    
-    def perform_destroy(self, instance):
-        instance.delete()
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def add_review(self, request, pk=None):
+        product = self.get_object()
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, product=product)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def wishlist(self, request, pk=None):
+        product = self.get_object()
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        if product in wishlist.products.all():
+            wishlist.products.remove(product)
+            return Response({'message': 'Removed from wishlist'}, status=status.HTTP_200_OK)
+        else:
+            wishlist.products.add(product)
+            return Response({'message': 'Added to wishlist'}, status=status.HTTP_201_CREATED)
 
-class CartItemViewSet(ModelViewSet):
-    queryset = CartItem.objects.all()
-    serializer_class = CartItemSerializer
+class WishlistViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = WishlistSerializer
 
-    def create(self, request, *args, **kwargs):
-        product_id = request.data.get('product_id')
-        quantity = int(request.data.get('quantity', 1))
-
-        if not product_id:
-            return Response({'error': 'product_id is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Check if item already exists in cart
-        cart_item, created = CartItem.objects.get_or_create(
-            product_id=product_id,
-            defaults={'quantity': quantity}
-        )
-
-        if not created:
-            # If it exists, just add the quantity
-            cart_item.quantity += quantity
-            cart_item.save()
-
-        serializer = self.get_serializer(cart_item)
-        return Response(
-            serializer.data, 
-            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
-        )
-
-    def perform_update(self, serializer):
-        serializer.save()
-    
-    def perform_destroy(self, instance):
-        instance.delete()
+    def get_queryset(self):
+        return Wishlist.objects.filter(user=self.request.user)

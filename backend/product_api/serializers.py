@@ -1,37 +1,41 @@
 from rest_framework import serializers
-from .models import CartItem, Product
+from .models import Category, Product, Review, Wishlist
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'rating', 'comment', 'created_at']
 
 class ProductSerializer(serializers.ModelSerializer):
+    vendor = serializers.StringRelatedField(read_only=True)
+    category_name = serializers.ReadOnlyField(source='category.name')
+    reviews = ReviewSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'photo']
-        extra_kwargs = {'photo': {'required': False, 'allow_null': True}}
-        depth = 1
+        fields = [
+            'id', 'vendor', 'category', 'category_name', 'name', 
+            'description', 'price', 'stock', 'image', 'is_active', 
+            'reviews', 'average_rating', 'created_at'
+        ]
 
-    def create(self, validated_data):
-        product = Product.objects.create(**validated_data)
-        return product
+    def get_average_rating(self, obj):
+        reviews = obj.reviews.all()
+        if not reviews:
+            return 0
+        return sum(r.rating for r in reviews) / len(reviews)
+
+class WishlistSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(many=True, read_only=True)
     
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.description = validated_data.get('description', instance.description)
-        instance.price = validated_data.get('price', instance.price)
-        instance.photo = validated_data.get('photo', instance.photo)
-        instance.save()
-        return instance
-    
-    def delete(self, instance):
-        instance.delete()
-        return instance
-        
-
-class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
-    product_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(), source='product', write_only=True
-    )
-    total_price = serializers.ReadOnlyField(source='total')
-
     class Meta:
-        model = CartItem
-        fields = ['id', 'product', 'product_id', 'quantity', 'total_price']
+        model = Wishlist
+        fields = ['id', 'products']

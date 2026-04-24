@@ -12,10 +12,24 @@ def api_root(request, format=None):
         'version': '1.0.0',
         'status': 'Running',
         'endpoints': {
-            'auth': reverse('auth_token', request=request, format=format),
-            'users': reverse('siteuser-list', request=request, format=format),
-            'products': reverse('product-list', request=request, format=format),
-            'cart-items': reverse('cartitem-list', request=request, format=format),
+            'auth': {
+                'register': reverse('register', request=request, format=format),
+                'login': reverse('login', request=request, format=format),
+                'token_refresh': reverse('token_refresh', request=request, format=format),
+                'profile': reverse('profile', request=request, format=format),
+            },
+            'products': {
+                'list': reverse('product-list', request=request, format=format),
+                'categories': reverse('category-list', request=request, format=format),
+            },
+            'orders': {
+                'list': reverse('order-list', request=request, format=format),
+                'cart': reverse('cart-mine', request=request, format=format),
+            },
+            'documentation': {
+                'swagger': reverse('swagger-ui', request=request, format=format),
+                'redoc': reverse('redoc', request=request, format=format),
+            }
         }
     })
 

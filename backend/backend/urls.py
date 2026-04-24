@@ -1,16 +1,29 @@
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from user_api.views import UserObtainToken
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
-from .views import api_root, home
+from . import views
 
 urlpatterns = [
-    path('', home, name='home'),
     path('admin/', admin.site.urls),
-    path('api/', api_root, name='api-root'),
-    re_path(r'^api/', include('user_api.urls')),
-    re_path(r'^api/', include('product_api.urls')),
-    re_path(r'^auth/?$', UserObtainToken.as_view(), name='auth_token'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+    # Landing Page & API Root
+    path('', views.home, name='home'),
+    path('api/', views.api_root, name='api-root'),
+    
+    # API URLs
+    path('api/users/', include('user_api.urls')),
+    path('api/products/', include('product_api.urls')),
+    path('api/orders/', include('order_api.urls')),
+    
+    # Documentation
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

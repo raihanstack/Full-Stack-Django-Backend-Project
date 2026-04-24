@@ -1,38 +1,54 @@
-from .models import SiteUser
-from rest_framework import viewsets, permissions
-from .serializers import UserSerializer
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import status, generics, permissions
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import SiteUser
+from .serializers import UserRegistrationSerializer, UserDetailSerializer, UserLoginSerializer
+from django.contrib.auth import authenticate
 
-class UserViewSet(viewsets.ModelViewSet):
+class RegisterView(generics.CreateAPIView):
     queryset = SiteUser.objects.all()
-    serializer_class = UserSerializer
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UserRegistrationSerializer
 
-    def get_permissions(self):
-        if self.action == 'create':
-            return [permissions.AllowAny()]
-        return [permissions.IsAuthenticated()]
-    
-class UserObtainToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        if not username:
-            return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+class LoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
-        checkUser = SiteUser.objects.filter(username=username)
-        if not checkUser.exists():           
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-        
-        response = super().post(request, *args, **kwargs)
-        if response.status_code != status.HTTP_200_OK:
-            return response
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = authenticate(
+                username=serializer.validated_data['username'],
+                password=serializer.validated_data['password']
+            )
+            if user:
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': UserDetailSerializer(user).data
+                })
+            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        token = response.data.get('token')
-        user = SiteUser.objects.get(username=username)
-        serializer = UserSerializer(user)
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = UserDetailSerializer
 
-        return Response({
-            'token': token,
-            'user': serializer.data
-        })
+    def get_object(self):
+        return self.request.user
+
+class LogoutView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response({'error': 'Refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Successfully logged out'}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
