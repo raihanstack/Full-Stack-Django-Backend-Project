@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product
+from .models import CartItem, Product
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,26 @@ class ProductSerializer(serializers.ModelSerializer):
         def delete(self, instance):
             instance.delete()
             return instance
+        
+
+class CartItemSerializer(serializers.Serializer):
+    product= serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
+
+    class Meta:
+        model = Product
+        fields = ['product', 'quantity']
+        depth = 1
+
+    def create(self, validated_data):
+        cart_item = CartItem.objects.create(**validated_data)
+        return cart_item
+    
+    def update(self, instance, validated_data):
+        instance.product = validated_data.get('product', instance.product)
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.save()
+        return instance
+    
+    def delete(self, instance):
+        instance.delete()
+        return instance
