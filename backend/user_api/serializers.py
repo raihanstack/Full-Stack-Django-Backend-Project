@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.authentication.models import Token
+from rest_framework.authtoken.models import Token
 from .models import SiteUser
 
 class UserSerializer(serializers.ModelSerializer):
