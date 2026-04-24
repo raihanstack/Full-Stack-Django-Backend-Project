@@ -1,7 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
-
-from .models import Product
+from .models import CartItem, Product
 from .serializers import CartItemSerializer, ProductSerializer
 
 

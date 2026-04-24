@@ -4,9 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from user_api.views import UserObtainToken
 
+from .views import api_root
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', api_root, name='api-root'),
     re_path(r'^api/', include('user_api.urls')),
     re_path(r'^api/', include('product_api.urls')),
-    re_path(r'^auth/?$', UserObtainToken.as_view()),
+    re_path(r'^auth/?$', UserObtainToken.as_view(), name='auth_token'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
