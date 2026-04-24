@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 USER_OPTIONS = [
     ('user', 'user'),
     ('admin', 'admin'),
-    ('superuser', 'Superuser'),
+    ('superadmin', 'superadmin'),
 ]
 
 class SiteUser(AbstractUser):
